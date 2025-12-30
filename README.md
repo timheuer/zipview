@@ -4,8 +4,16 @@
 
 **Zip Viewer** brings seamless zip file browsing directly into VS Code's Explorer. Browse, preview, and inspect archived files as if they were part of your workspace—no extraction required.
 
-![VS Code](https://img.shields.io/badge/VS%20Code-1.107%2B-blue?logo=visualstudiocode)
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/timheuer.vscode-zip-viewer?label=VS%20Code%20Marketplace&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=timheuer.vscode-zip-viewer)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/timheuer.vscode-zip-viewer?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=timheuer.vscode-zip-viewer)
 ![License](https://img.shields.io/badge/license-MIT-green)
+
+## 📥 Installation
+
+[![Install in VS Code](https://img.shields.io/badge/Install%20in-VS%20Code-blue?logo=visualstudiocode)](vscode:extension/timheuer.vscode-zip-viewer)
+[![Install in VS Code Insiders](https://img.shields.io/badge/Install%20in-VS%20Code%20Insiders-green?logo=visualstudiocode)](vscode-insiders:extension/timheuer.vscode-zip-viewer)
+
+Or search for **"Zip Viewer"** in the VS Code Extensions view (`Ctrl+Shift+X`).
 
 ## ✨ Features
 
