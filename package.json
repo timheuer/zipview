@@ -24,7 +24,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onView:zipExplorer"
+    
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -72,14 +72,16 @@
       "explorer": [
         {
           "id": "zipExplorer",
-          "name": "Zip Files"
+          "name": "Zip Files",
+          "icon": "$(file-zip)"
         }
       ]
     },
     "commands": [
       {
         "command": "zipExplorer.showInWorkspace",
-        "title": "Show in Workspace"
+        "title": "Show in Workspace",
+        "icon": "$(arrow-small-right)"
       }
     ],
     "menus": {
