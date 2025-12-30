@@ -1,71 +1,68 @@
-# vscode-zip-view README
+# Zip View
 
-This is the README for your extension "vscode-zip-view". After writing up a brief description, we recommend including the following sections.
+A Visual Studio Code extension that provides a tree view explorer for browsing the contents of zip files in your workspace.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- **Zip File Explorer** - View all zip files in your workspace in a dedicated tree view in the Explorer sidebar
+- **Browse Contents** - Expand zip files to browse their contents without extracting
+- **File Preview** - Click on files inside zip archives to view them with proper syntax highlighting
+- **Image Preview** - View images (PNG, JPG, GIF, etc.) from within zip files
+- **Theme Icons** - Files and folders use your current file icon theme
+- **Auto-Refresh** - Automatically updates when zip files are added, removed, or modified
+- **Show in Workspace** - Right-click a zip file to reveal it in the default Explorer view
 
-For example if there is an image subfolder under your extension project workspace:
+## Usage
 
-\!\[feature X\]\(images/feature-x.png\)
+1. Open a workspace containing zip files
+2. Look for the "Zip Files" section in the Explorer sidebar
+3. Expand any zip file to browse its contents
+4. Click on a file to preview it
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+## Supported File Types
+
+### Text Files
+All text-based files open with proper syntax highlighting based on their extension (`.js`, `.ts`, `.css`, `.json`, `.xml`, `.md`, etc.)
+
+### Images
+The following image formats are displayed in a preview panel:
+- PNG, JPG, JPEG, GIF, BMP, ICO, WebP, SVG
+
+### Binary Files
+Other binary files (executables, PDFs, etc.) cannot be previewed but are listed in the tree.
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- VS Code 1.107.0 or higher
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `zipView.maxFileSize` | `10` | Maximum file size (in MB) that can be previewed from zip archives. |
+| `zipView.maxCompressionRatio` | `100` | Maximum allowed compression ratio for zip entries. Files exceeding this ratio are blocked as potential zip bombs. |
+| `zipView.maxCacheSize` | `50` | Maximum number of file contents to cache in memory for faster access. |
+
+> ⚠️ **Warning**: Increasing these values above their defaults may cause high memory usage or crashes. The defaults are set to balance functionality with security and performance.
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- Large zip files may take a moment to load on first expansion
+- Binary files other than images cannot be previewed
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.0.1
 
-### 1.0.0
+Initial release:
+- Zip file tree view in Explorer
+- File content preview with syntax highlighting
+- Image preview support
+- File system watcher for auto-refresh
+- Show in Workspace context menu
 
-Initial release of ...
+## License
 
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+[MIT](LICENSE.md)

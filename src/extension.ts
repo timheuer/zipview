@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { ZipExplorerProvider } from './ZipExplorerProvider';
-import { ZipContentProvider, isBinaryFile, isImageFile, extractFileFromZip } from './ZipContentProvider';
+import { ZipContentProvider, isBinaryFile, isImageFile, extractFileFromZip, escapeHtml } from './ZipContentProvider';
 
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Zip View extension is now active');
@@ -94,13 +94,15 @@ async function showImageInWebview(
 		const base64 = imageData.toString('base64');
 		const ext = path.extname(fileName).toLowerCase().slice(1);
 		const mimeType = getMimeType(ext);
+		const safeFileName = escapeHtml(fileName);
 
 		panel.webview.html = `<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>${fileName}</title>
+	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline';">
+	<title>${safeFileName}</title>
 	<style>
 		body {
 			margin: 0;
@@ -119,12 +121,20 @@ async function showImageInWebview(
 	</style>
 </head>
 <body>
-	<img src="data:${mimeType};base64,${base64}" alt="${fileName}" />
+	<img src="data:${mimeType};base64,${base64}" alt="${safeFileName}" />
 </body>
 </html>`;
 	} catch (error) {
 		const message = error instanceof Error ? error.message : String(error);
-		panel.webview.html = `<html><body><p>Error loading image: ${message}</p></body></html>`;
+		panel.webview.html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Security-Policy" content="default-src 'none';">
+</head>
+<body>
+	<p>Error loading image: ${escapeHtml(message)}</p>
+</body>
+</html>`;
 	}
 }
 

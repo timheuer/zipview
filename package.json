@@ -1,6 +1,6 @@
 {
-  "name": "vscode-zip-view",
-  "displayName": "vscode-zip-view",
+  "name": "vscode-zip-viewer",
+  "displayName": "Zip Viewer",
   "description": "A browser and viewer for zip files in the workspace",
   "version": "0.0.1",
   "engines": {
@@ -14,6 +14,32 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "configuration": {
+      "title": "Zip Viewer",
+      "properties": {
+        "zipView.maxFileSize": {
+          "type": "number",
+          "default": 10,
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Maximum file size (in MB) that can be previewed from zip archives. ⚠️ Warning: Setting this above the default (10MB) may cause high memory usage or crashes when opening large files."
+        },
+        "zipView.maxCompressionRatio": {
+          "type": "number",
+          "default": 100,
+          "minimum": 10,
+          "maximum": 10000,
+          "description": "Maximum allowed compression ratio (uncompressed/compressed size) for zip entries. Files exceeding this ratio are blocked as potential zip bombs. ⚠️ Warning: Setting this above the default (100) increases vulnerability to zip bomb attacks which can cause memory exhaustion and crashes."
+        },
+        "zipView.maxCacheSize": {
+          "type": "number",
+          "default": 50,
+          "minimum": 1,
+          "maximum": 500,
+          "description": "Maximum number of file contents to cache in memory for faster access. ⚠️ Warning: Setting this above the default (50) increases memory usage, especially when viewing large files."
+        }
+      }
+    },
     "views": {
       "explorer": [
         {
