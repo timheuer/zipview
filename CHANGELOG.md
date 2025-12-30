@@ -2,7 +2,22 @@
 
 All notable changes to the Zip Viewer extension will be documented in this file.
 
-## [Unreleased]
+## [0.1.9] - 2025-12-30
+
+### 📝 Other Changes
+
+- Enhance changelog generation and update documentation
+
+- 📜 docs: Improve changelog generation with version tagging
+- Update .vscodeignore to include additional files [skip ci]
+
+- ✨ Add cliff.toml to ignore list
+- 📄 Include CHANGELOG.md in ignored files
+## [0.1.7] - 2025-12-30
+
+### ⚙️ Miscellaneous
+
+- Update changelog [skip ci]
 
 ### 📝 Other Changes
 
@@ -11,8 +26,6 @@ All notable changes to the Zip Viewer extension will be documented in this file.
 - 📜 docs: Generate changelog automatically using git-cliff
 - 📝 docs: Update README with enhanced features and usage instructions
 - 🔧 chore: Add configuration for changelog generation
-
-
 ## [0.1.5] - 2025-12-30
 
 ### 📝 Other Changes
