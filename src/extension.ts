@@ -1,7 +1,9 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as fs from 'fs';
+import * as os from 'os';
 import { ZipExplorerProvider } from './ZipExplorerProvider';
-import { ZipContentProvider, isBinaryFile, isImageFile, extractFileFromZip, escapeHtml } from './ZipContentProvider';
+import { ZipContentProvider, isBinaryFile, isImageFile, extractFileFromZip } from './ZipContentProvider';
 import { initLogger, logger } from './logger';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -23,8 +25,8 @@ export function activate(context: vscode.ExtensionContext) {
 				// Handle binary files differently
 				if (isBinaryFile(fileName)) {
 					if (isImageFile(fileName)) {
-						// Show images in a webview
-						await showImageInWebview(context, zipPath, internalPath, fileName);
+						// Extract to temp file and open with VS Code's native image viewer
+						await openImageWithNativeViewer(context, zipPath, internalPath, fileName);
 					} else {
 						// For other binary files, show a message
 						vscode.window.showInformationMessage(
@@ -78,85 +80,33 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 /**
- * Shows an image from a zip file in a webview panel
+ * Opens an image from a zip file using VS Code's native image viewer.
+ * Extracts the image to a temp file and opens it.
  */
-async function showImageInWebview(
+async function openImageWithNativeViewer(
 	context: vscode.ExtensionContext,
 	zipPath: string,
 	internalPath: string,
 	fileName: string
 ): Promise<void> {
-	const panel = vscode.window.createWebviewPanel(
-		'zipImagePreview',
-		fileName,
-		vscode.ViewColumn.One,
-		{ enableScripts: false }
-	);
+	// Create temp directory for extracted images if needed
+	const tempDir = path.join(os.tmpdir(), 'zipview-images');
+	await fs.promises.mkdir(tempDir, { recursive: true });
 
-	try {
-		const imageData = await extractFileFromZip(zipPath, internalPath);
-		const base64 = imageData.toString('base64');
-		const ext = path.extname(fileName).toLowerCase().slice(1);
-		const mimeType = getMimeType(ext);
-		const safeFileName = escapeHtml(fileName);
+	// Create a unique filename to avoid conflicts
+	const zipName = path.basename(zipPath, '.zip');
+	const safePath = internalPath.replace(/[/\\]/g, '_');
+	const tempFilePath = path.join(tempDir, `${zipName}_${safePath}`);
 
-		panel.webview.html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline';">
-	<title>${safeFileName}</title>
-	<style>
-		body {
-			margin: 0;
-			padding: 20px;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			min-height: calc(100vh - 40px);
-			background: var(--vscode-editor-background);
-		}
-		img {
-			max-width: 100%;
-			max-height: 100%;
-			object-fit: contain;
-		}
-	</style>
-</head>
-<body>
-	<img src="data:${mimeType};base64,${base64}" alt="${safeFileName}" />
-</body>
-</html>`;
-	} catch (error) {
-		const message = error instanceof Error ? error.message : String(error);
-		panel.webview.html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta http-equiv="Content-Security-Policy" content="default-src 'none';">
-</head>
-<body>
-	<p>Error loading image: ${escapeHtml(message)}</p>
-</body>
-</html>`;
-	}
-}
+	// Extract and write the image
+	const imageData = await extractFileFromZip(zipPath, internalPath);
+	await fs.promises.writeFile(tempFilePath, imageData);
 
-/**
- * Get MIME type for an image extension
- */
-function getMimeType(ext: string): string {
-	const mimeTypes: Record<string, string> = {
-		'png': 'image/png',
-		'jpg': 'image/jpeg',
-		'jpeg': 'image/jpeg',
-		'gif': 'image/gif',
-		'bmp': 'image/bmp',
-		'ico': 'image/x-icon',
-		'webp': 'image/webp',
-		'svg': 'image/svg+xml'
-	};
-	return mimeTypes[ext] || 'application/octet-stream';
+	// Open with VS Code's native viewer
+	const fileUri = vscode.Uri.file(tempFilePath);
+	await vscode.commands.executeCommand('vscode.open', fileUri);
+
+	logger.debug('Opened image with native viewer', { tempFile: tempFilePath });
 }
 
 export function deactivate() {}
