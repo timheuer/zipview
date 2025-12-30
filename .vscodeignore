@@ -15,3 +15,5 @@ vsc-extension-quickstart.md
 version.json
 changelog.md
 .github/**
+cliff.toml
+CHANGELOG.md
