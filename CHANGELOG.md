@@ -2,7 +2,20 @@
 
 All notable changes to the Zip Viewer extension will be documented in this file.
 
+## [0.1.12] - 2025-12-30
+
+### ⚙️ Miscellaneous
+
+- Updating activation and visuals
+
+### 📝 Other Changes
+
+- Update readme badges [skip ci]
 ## [0.1.9] - 2025-12-30
+
+### ⚙️ Miscellaneous
+
+- Update changelog [skip ci]
 
 ### 📝 Other Changes
 
