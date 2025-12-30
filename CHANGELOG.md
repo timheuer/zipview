@@ -11,6 +11,8 @@ All notable changes to the Zip Viewer extension will be documented in this file.
 - 📜 docs: Generate changelog automatically using git-cliff
 - 📝 docs: Update README with enhanced features and usage instructions
 - 🔧 chore: Add configuration for changelog generation
+
+
 ## [0.1.5] - 2025-12-30
 
 ### 📝 Other Changes
