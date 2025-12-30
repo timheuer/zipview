@@ -2,9 +2,12 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { ZipExplorerProvider } from './ZipExplorerProvider';
 import { ZipContentProvider, isBinaryFile, isImageFile, extractFileFromZip, escapeHtml } from './ZipContentProvider';
+import { initLogger, logger } from './logger';
 
 export function activate(context: vscode.ExtensionContext) {
-	console.log('Zip View extension is now active');
+	// Initialize logger first
+	initLogger(context);
+	logger.info('Zip View extension is now active');
 
 	// Register the content provider for zip file contents
 	const zipContentProvider = new ZipContentProvider();
@@ -36,6 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
 				await vscode.window.showTextDocument(doc, { preview: true });
 			} catch (error) {
 				const message = error instanceof Error ? error.message : String(error);
+				logger.error('Failed to open file', { fileName, error: message });
 				vscode.window.showErrorMessage(`Failed to open file: ${message}`);
 			}
 		}

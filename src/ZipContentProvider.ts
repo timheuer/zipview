@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import JSZip from 'jszip';
 import * as fs from 'fs';
 import * as path from 'path';
+import { logger } from './logger';
 
 // Default security constants (can be overridden via settings)
 const DEFAULT_MAX_FILE_SIZE_MB = 10;
@@ -56,10 +57,12 @@ export function sanitizeZipPath(internalPath: string): string | null {
         }
         // Reject parent directory references
         if (part === '..') {
+            logger.warn('Path traversal attempt blocked', { path: internalPath });
             return null;
         }
         // Reject parts that look like absolute paths (Windows drive letters)
         if (/^[a-zA-Z]:$/.test(part)) {
+            logger.warn('Absolute path in zip blocked', { path: internalPath });
             return null;
         }
         safeParts.push(part);
@@ -78,10 +81,17 @@ export function sanitizeZipPath(internalPath: string): string | null {
 export function isZipBomb(compressedSize: number, uncompressedSize: number, maxCompressionRatio?: number): boolean {
     const maxRatio = maxCompressionRatio ?? getConfig().maxCompressionRatio;
     if (compressedSize === 0) {
+        if (uncompressedSize > 0) {
+            logger.warn('Potential zip bomb detected: zero compressed size with non-zero uncompressed size');
+        }
         return uncompressedSize > 0;
     }
     const ratio = uncompressedSize / compressedSize;
-    return ratio > maxRatio;
+    if (ratio > maxRatio) {
+        logger.warn('Potential zip bomb detected', { compressedSize, uncompressedSize, ratio, maxRatio });
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -203,6 +213,7 @@ export class ZipContentProvider implements vscode.TextDocumentContentProvider {
             const { maxFileSize, maxCompressionRatio } = getConfig();
 
             if (uncompressedSize > maxFileSize) {
+                logger.warn('File too large to preview', { path: internalPath, size: uncompressedSize, limit: maxFileSize });
                 return `Error: File too large to preview (${Math.round(uncompressedSize / 1024 / 1024)}MB exceeds ${Math.round(maxFileSize / 1024 / 1024)}MB limit).`;
             }
 
@@ -213,10 +224,12 @@ export class ZipContentProvider implements vscode.TextDocumentContentProvider {
 
             // Try to read as text
             const content = await file.async('string');
+            logger.trace('File content loaded', { path: internalPath, size: content.length });
             this.addToCache(cacheKey, content);
             return content;
         } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
+            logger.error('Error reading file from zip', { zipPath, path: internalPath, error: message });
             return `Error reading file: ${escapeHtml(message)}`;
         }
     }

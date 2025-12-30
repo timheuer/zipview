@@ -2,6 +2,18 @@ import * as vscode from 'vscode';
 import JSZip from 'jszip';
 import * as fs from 'fs';
 import { ZipTreeItem } from './ZipTreeItem';
+import { logger } from './logger';
+
+/**
+ * Format bytes into a human-readable string
+ */
+function formatBytes(bytes: number): string {
+    if (bytes === 0) { return '0 B'; }
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+}
 
 export class ZipExplorerProvider implements vscode.TreeDataProvider<ZipTreeItem> {
     private _onDidChangeTreeData = new vscode.EventEmitter<ZipTreeItem | undefined | null | void>();
@@ -38,19 +50,19 @@ export class ZipExplorerProvider implements vscode.TreeDataProvider<ZipTreeItem>
             const watcher = vscode.workspace.createFileSystemWatcher(pattern);
 
             watcher.onDidCreate((uri) => {
-                console.log('Zip file created:', uri.fsPath);
+                logger.debug('Zip file created', { path: uri.fsPath });
                 this.invalidateCache(uri);
                 this.scanForZipFiles();
             });
 
             watcher.onDidDelete((uri) => {
-                console.log('Zip file deleted:', uri.fsPath);
+                logger.debug('Zip file deleted', { path: uri.fsPath });
                 this.invalidateCache(uri);
                 this.scanForZipFiles();
             });
 
             watcher.onDidChange((uri) => {
-                console.log('Zip file changed:', uri.fsPath);
+                logger.debug('Zip file changed', { path: uri.fsPath });
                 this.invalidateCache(uri);
                 this.refresh();
             });
@@ -87,6 +99,7 @@ export class ZipExplorerProvider implements vscode.TreeDataProvider<ZipTreeItem>
 
     private async scanForZipFiles(): Promise<void> {
         this.zipFiles = await vscode.workspace.findFiles('**/*.zip');
+        logger.info('Workspace scan complete', { zipFilesFound: this.zipFiles.length });
         this.refresh();
     }
 
@@ -132,16 +145,45 @@ export class ZipExplorerProvider implements vscode.TreeDataProvider<ZipTreeItem>
     private async loadZip(uri: vscode.Uri): Promise<JSZip | null> {
         // Check cache first
         if (this.zipContentsCache.has(uri.fsPath)) {
+            logger.debug('Zip loaded from cache', { path: uri.fsPath });
             return this.zipContentsCache.get(uri.fsPath)!;
         }
 
         try {
             const data = await fs.promises.readFile(uri.fsPath);
             const zip = await JSZip.loadAsync(data);
+            
+            // Count entries for logging
+            let fileCount = 0;
+            let folderCount = 0;
+            let totalUncompressedSize = 0;
+            zip.forEach((_, zipEntry) => {
+                if (zipEntry.dir) {
+                    folderCount++;
+                } else {
+                    fileCount++;
+                    // Access internal data for size info
+                    const entryData = zipEntry as JSZip.JSZipObject & { _data?: { uncompressedSize?: number } };
+                    totalUncompressedSize += entryData._data?.uncompressedSize ?? 0;
+                }
+            });
+            
+            const archiveSizeBytes = data.length;
+            const compressionRatio = totalUncompressedSize > 0 ? (totalUncompressedSize / archiveSizeBytes).toFixed(2) : 'N/A';
+            
+            logger.info('Zip archive opened', {
+                path: uri.fsPath,
+                archiveSize: formatBytes(archiveSizeBytes),
+                totalFiles: fileCount,
+                totalFolders: folderCount,
+                uncompressedSize: formatBytes(totalUncompressedSize),
+                compressionRatio
+            });
+            
             this.zipContentsCache.set(uri.fsPath, zip);
             return zip;
         } catch (error) {
-            console.error(`Error loading zip file ${uri.fsPath}:`, error);
+            logger.error('Error loading zip file', { path: uri.fsPath, error });
             return null;
         }
     }
