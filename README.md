@@ -1,68 +1,68 @@
-# Zip View
+# 📦 Zip Viewer
 
-A Visual Studio Code extension that provides a tree view explorer for browsing the contents of zip files in your workspace.
+> Peek inside zip files without ever extracting them!
 
-## Features
+**Zip Viewer** brings seamless zip file browsing directly into VS Code's Explorer. Browse, preview, and inspect archived files as if they were part of your workspace—no extraction required.
 
-- **Zip File Explorer** - View all zip files in your workspace in a dedicated tree view in the Explorer sidebar
-- **Browse Contents** - Expand zip files to browse their contents without extracting
-- **File Preview** - Click on files inside zip archives to view them with proper syntax highlighting
-- **Image Preview** - View images (PNG, JPG, GIF, etc.) from within zip files
-- **Theme Icons** - Files and folders use your current file icon theme
-- **Auto-Refresh** - Automatically updates when zip files are added, removed, or modified
-- **Show in Workspace** - Right-click a zip file to reveal it in the default Explorer view
+![VS Code](https://img.shields.io/badge/VS%20Code-1.107%2B-blue?logo=visualstudiocode)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-## Usage
+## ✨ Features
 
-1. Open a workspace containing zip files
-2. Look for the "Zip Files" section in the Explorer sidebar
-3. Expand any zip file to browse its contents
-4. Click on a file to preview it
+| Feature | Description |
+|---------|-------------|
+| 🗂️ **Explorer Integration** | Zip files appear in a dedicated "Zip Files" panel in your Explorer sidebar |
+| 🔍 **Browse Without Extracting** | Expand archives to navigate their full directory structure |
+| 📄 **Syntax-Highlighted Preview** | Open any text file with full language support—JS, TS, JSON, CSS, Markdown, and more |
+| 🖼️ **Image Preview** | View PNG, JPG, GIF, WebP, SVG, and other images using VS Code's native viewer |
+| 🎨 **Theme-Aware Icons** | Files and folders display icons from your current file icon theme |
+| ⚡ **Live Updates** | Tree automatically refreshes when zip files are added, removed, or changed |
+| 📍 **Quick Navigation** | Right-click any zip to reveal it in the workspace Explorer |
 
-## Supported File Types
+## 🚀 Getting Started
+
+1. **Install** the extension from the VS Code Marketplace
+2. **Open** a workspace containing `.zip` files
+3. **Find** the "Zip Files" panel in your Explorer sidebar
+4. **Click** any zip file to expand and browse its contents
+5. **Select** a file to preview it instantly
+
+## 📁 Supported File Types
 
 ### Text Files
-All text-based files open with proper syntax highlighting based on their extension (`.js`, `.ts`, `.css`, `.json`, `.xml`, `.md`, etc.)
+All text-based files open with proper syntax highlighting based on their extension—`.js`, `.ts`, `.py`, `.css`, `.json`, `.xml`, `.md`, `.html`, `.yaml`, and hundreds more.
 
 ### Images
-The following image formats are displayed in a preview panel:
+Images open in VS Code's built-in image viewer with full zoom and pan support:
 - PNG, JPG, JPEG, GIF, BMP, ICO, WebP, SVG
 
 ### Binary Files
-Other binary files (executables, PDFs, etc.) cannot be previewed but are listed in the tree.
+Other binary files (executables, PDFs, archives) are listed in the tree but cannot be previewed.
 
-## Requirements
+## ⚙️ Configuration
 
-- VS Code 1.107.0 or higher
-
-## Extension Settings
-
-This extension contributes the following settings:
+Fine-tune the extension's behavior in your VS Code settings:
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `zipView.maxFileSize` | `10` | Maximum file size (in MB) that can be previewed from zip archives. |
-| `zipView.maxCompressionRatio` | `100` | Maximum allowed compression ratio for zip entries. Files exceeding this ratio are blocked as potential zip bombs. |
-| `zipView.maxCacheSize` | `50` | Maximum number of file contents to cache in memory for faster access. |
+| `zipView.maxFileSize` | `10` | Max file size (MB) that can be previewed |
+| `zipView.maxCompressionRatio` | `100` | Max compression ratio before blocking (zip bomb protection) |
+| `zipView.maxCacheSize` | `50` | Number of file contents to cache for faster access |
+| `zipView.logLevel` | `info` | Logging verbosity: `off`, `error`, `warn`, `info`, `debug`, `trace` |
 
-> ⚠️ **Warning**: Increasing these values above their defaults may cause high memory usage or crashes. The defaults are set to balance functionality with security and performance.
+> 💡 **Tip**: Defaults are optimized for security and performance. Increase with caution.
 
-## Known Issues
+## 🔒 Security
 
-- Large zip files may take a moment to load on first expansion
-- Binary files other than images cannot be previewed
+Zip Viewer includes built-in protections:
+- **Path traversal prevention** — Blocks malicious paths like `../../../etc/passwd`
+- **Zip bomb detection** — Refuses to open files with suspicious compression ratios
+- **File size limits** — Prevents memory exhaustion from oversized files
 
-## Release Notes
+## 📋 Requirements
 
-### 0.0.1
+- Visual Studio Code **1.107.0** or higher
 
-Initial release:
-- Zip file tree view in Explorer
-- File content preview with syntax highlighting
-- Image preview support
-- File system watcher for auto-refresh
-- Show in Workspace context menu
+## 📄 License
 
-## License
-
-[MIT](LICENSE.md)
+[MIT](LICENSE.md) — Made with ☕ by [Tim Heuer](https://timheuer.com)
