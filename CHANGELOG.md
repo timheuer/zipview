@@ -2,10 +2,16 @@
 
 All notable changes to the Zip Viewer extension will be documented in this file.
 
+## [0.1.14] - 2026-01-13
+
+### ✨ Features
+
+- Add refresh command and welcome view for zip explorer
 ## [0.1.12] - 2025-12-30
 
 ### ⚙️ Miscellaneous
 
+- Update changelog [skip ci]
 - Updating activation and visuals
 
 ### 📝 Other Changes
