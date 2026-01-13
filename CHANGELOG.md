@@ -2,7 +2,18 @@
 
 All notable changes to the Zip Viewer extension will be documented in this file.
 
+## [0.1.16] - 2026-01-13
+
+### 🐛 Bug Fixes
+
+- Fix: update welcome message for zip explorer view
+- ✏️ Removed refresh command from welcome message
+- 📄 Simplified message for clarity
 ## [0.1.14] - 2026-01-13
+
+### ⚙️ Miscellaneous
+
+- Update changelog [skip ci]
 
 ### ✨ Features
 
