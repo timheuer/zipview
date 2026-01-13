@@ -80,7 +80,7 @@
     "viewsWelcome": [
       {
         "view": "zipExplorer",
-        "contents": "No zip files found in the workspace.\n[Refresh](command:zipExplorer.refresh)"
+        "contents": "No zip files found in the workspace."
       }
     ],
     "commands": [
