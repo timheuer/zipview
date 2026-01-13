@@ -77,14 +77,32 @@
         }
       ]
     },
+    "viewsWelcome": [
+      {
+        "view": "zipExplorer",
+        "contents": "No zip files found in the workspace.\n[Refresh](command:zipExplorer.refresh)"
+      }
+    ],
     "commands": [
       {
         "command": "zipExplorer.showInWorkspace",
         "title": "Show in Workspace",
         "icon": "$(arrow-small-right)"
+      },
+      {
+        "command": "zipExplorer.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
       }
     ],
     "menus": {
+      "view/title": [
+        {
+          "command": "zipExplorer.refresh",
+          "when": "view == zipExplorer",
+          "group": "navigation"
+        }
+      ],
       "view/item/context": [
         {
           "command": "zipExplorer.showInWorkspace",

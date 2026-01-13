@@ -62,6 +62,15 @@ export function activate(context: vscode.ExtensionContext) {
 	// Create the ZipExplorerProvider
 	const zipExplorerProvider = new ZipExplorerProvider();
 
+	// Register refresh command
+	const refreshCommand = vscode.commands.registerCommand(
+		'zipExplorer.refresh',
+		() => {
+			zipExplorerProvider.refresh();
+		}
+	);
+	context.subscriptions.push(refreshCommand);
+
 	// Register the tree data provider
 	const treeView = vscode.window.createTreeView('zipExplorer', {
 		treeDataProvider: zipExplorerProvider,
